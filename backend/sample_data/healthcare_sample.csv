@@ -1,0 +1,16 @@
+patient_id,age,gender,disease,hospital,admission_date,discharge_date,claim_amount,claim_status,city
+P001,45,Male,Diabetes,Apollo Hospital,2025-01-10,2025-01-15,35000,Approved,Noida
+P002,60,Female,Heart Disease,Fortis Hospital,2025-02-12,2025-02-20,120000,Approved,Delhi
+P003,32,Male,Fever,Max Hospital,2025-03-05,2025-03-07,8000,Rejected,Gurugram
+P004,50,Female,Asthma,Apollo Hospital,2025-04-01,2025-04-04,25000,Pending,Noida
+P005,38,Male,Diabetes,Max Hospital,2025-05-11,2025-05-16,42000,Approved,Delhi
+P006,70,Female,Heart Disease,Fortis Hospital,2025-06-01,2025-06-10,150000,Approved,Noida
+P007,29,Female,Fever,Apollo Hospital,2025-07-03,2025-07-05,9000,Rejected,Gurugram
+P008,41,Male,Asthma,Max Hospital,2025-08-14,2025-08-18,30000,Approved,Noida
+P009,55,Female,Cancer,Fortis Hospital,2025-09-05,2025-09-20,230000,Pending,Delhi
+P010,48,Male,Diabetes,Apollo Hospital,2025-10-10,2025-10-14,39000,Approved,Gurugram
+P011,36,Female,Fever,Max Hospital,2025-01-22,2025-01-24,7500,Approved,Noida
+P012,63,Male,Heart Disease,Fortis Hospital,2025-02-18,2025-02-25,135000,Approved,Delhi
+P013,52,Female,Diabetes,Apollo Hospital,2025-03-13,2025-03-18,47000,Pending,Noida
+P014,46,Male,Asthma,Max Hospital,2025-04-19,2025-04-23,28000,Approved,Gurugram
+P015,58,Female,Cancer,Fortis Hospital,2025-05-08,2025-05-21,250000,Approved,Delhi
