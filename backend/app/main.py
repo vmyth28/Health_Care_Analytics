@@ -2,13 +2,21 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 import os
+import logging
 from dotenv import load_dotenv
 from app.database import Base, engine, SessionLocal
 from app.routes import upload_routes, record_routes, analytics_routes, ml_routes
 
 load_dotenv()
 
-Base.metadata.create_all(bind=engine)
+logger = logging.getLogger("uvicorn.error")
+
+try:
+    Base.metadata.create_all(bind=engine)
+    logger.info("✅ Database tables created/verified successfully.")
+except Exception as e:
+    logger.error(f"❌ Could not connect to the database on startup: {e}")
+    logger.error("Check your DATABASE_URL environment variable and make sure special characters in the password are URL-encoded (@ → %40, # → %23, etc.)")
 
 app = FastAPI(
     title="Healthcare Analytics and Prediction API",
@@ -16,14 +24,10 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Load CORS origins from environment variable
-origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",")
-origins = [origin.strip() for origin in origins]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -49,5 +53,25 @@ def db_test():
     try:
         db.execute(text("SELECT 1"))
         return {"status": "success", "message": "Database connected successfully"}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
     finally:
         db.close()
+
+
+@app.get("/api/health")
+def health_check():
+    """Quick liveness probe — always returns 200 even if DB is down."""
+    db_ok = False
+    db = SessionLocal()
+    try:
+        db.execute(text("SELECT 1"))
+        db_ok = True
+    except Exception:
+        pass
+    finally:
+        db.close()
+    return {
+        "status": "ok",
+        "database": "connected" if db_ok else "unreachable — check DATABASE_URL",
+    }
