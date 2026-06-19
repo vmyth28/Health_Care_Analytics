@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
-
+import os
 from app.database import Base, engine, SessionLocal
 from app.routes import upload_routes, record_routes, analytics_routes, ml_routes
 
@@ -26,6 +26,15 @@ app.include_router(record_routes.router)
 app.include_router(analytics_routes.router)
 app.include_router(ml_routes.router)
 
+origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def root():
