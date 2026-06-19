@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 class RecordCreate(BaseModel):
@@ -28,6 +28,12 @@ class RecordCreate(BaseModel):
     def normalize_gender(cls, value):
         return value.strip().title()
 
+    @model_validator(mode="after")
+    def validate_dates(self):
+        if self.discharge_date < self.admission_date:
+            raise ValueError("discharge_date cannot be before admission_date")
+        return self
+
 
 class RecordResponse(RecordCreate):
     id: int
@@ -46,3 +52,9 @@ class ClaimPredictionRequest(BaseModel):
     admission_date: date
     discharge_date: date
     city: str
+
+    @model_validator(mode="after")
+    def validate_dates(self):
+        if self.discharge_date < self.admission_date:
+            raise ValueError("discharge_date cannot be before admission_date")
+        return self

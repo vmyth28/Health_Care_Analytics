@@ -33,14 +33,6 @@ app.include_router(record_routes.router)
 app.include_router(analytics_routes.router)
 app.include_router(ml_routes.router)
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 @app.get("/")
 def root():
     return {"message": "Healthcare Analytics API is running successfully"}

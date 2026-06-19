@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float, Date, DateTime
-from datetime import datetime
+from datetime import datetime, timezone
 from app.database import Base
 
 
@@ -18,4 +18,4 @@ class HealthcareRecord(Base):
     claim_amount = Column(Float, nullable=False)
     claim_status = Column(String, nullable=False)
     city = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))

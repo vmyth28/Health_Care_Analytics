@@ -18,9 +18,9 @@ async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)
         df = pd.read_csv(file.file)
         clean_df, summary = clean_healthcare_dataframe(df)
 
-        inserted = 0
-        for _, row in clean_df.iterrows():
-            record = HealthcareRecord(
+        # Bulk-create ORM objects and insert in one shot — much faster than row-by-row
+        records = [
+            HealthcareRecord(
                 patient_id=str(row["patient_id"]),
                 age=int(row["age"]),
                 gender=str(row["gender"]),
@@ -33,14 +33,16 @@ async def upload_csv(file: UploadFile = File(...), db: Session = Depends(get_db)
                 claim_status=str(row["claim_status"]),
                 city=str(row["city"]),
             )
-            db.add(record)
-            inserted += 1
+            for _, row in clean_df.iterrows()
+        ]
 
+        db.add_all(records)
         db.commit()
+
         return {
             "message": "CSV uploaded and processed successfully",
             "file_name": file.filename,
-            "rows_inserted": inserted,
+            "rows_inserted": len(records),
             **summary,
         }
     except ValueError as ve:
